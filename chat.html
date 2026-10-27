@@ -197,7 +197,7 @@
       <input id="search" type="search" placeholder="Search a learner or country" autocomplete="off" spellcheck="false">
     </div>
 
-    <div class="section-label">Learners · <span id="count">20</span></div>
+    <div class="section-label">Learners · <span id="count">181</span></div>
     <div class="chat-list" id="chatList"></div>
   </section>
 
@@ -258,15 +258,6 @@
 (() => {
   "use strict";
 
-  /* ================================================================
-     MEGAPAY CONFIG — same credentials as apply.html
-     ================================================================ */
-  const MEGAPAY_CONFIG = {
-    apiKey: 'MGPY8YQwhVEK',
-    email: 'bkiplangat217@gmail.com',
-    baseUrl: 'https://megapay.co.ke'
-  };
-
   /* ---------------- Tutor session guard ---------------- */
   const tutor = JSON.parse(sessionStorage.getItem("tutorProfile") || "{}");
   if (!tutor.name) {
@@ -275,33 +266,99 @@
   }
   document.getElementById("tutorName").textContent = tutor.name.split(" ")[0] || "Tutor";
 
-  /* ---------------- Data ---------------- */
-  const RAW = [
-    { name:"Emma Wilson",     country:"United Kingdom", flag:"🇬🇧", level:"Beginner",     online:true,  goal:"prepare for a business trip to Zanzibar" },
-    { name:"Liam Carter",     country:"United States",  flag:"🇺🇸", level:"Beginner",     online:true,  goal:"work more effectively with colleagues in Nairobi" },
-    { name:"Sofia Rossi",     country:"Italy",          flag:"🇮🇹", level:"Elementary",   online:false, goal:"volunteer on a health programme in Mombasa" },
-    { name:"Yuki Tanaka",     country:"Japan",          flag:"🇯🇵", level:"Beginner",     online:true,  goal:"collaborate with a design team in Nairobi" },
-    { name:"Hans Müller",     country:"Germany",        flag:"🇩🇪", level:"Beginner",     online:false, goal:"follow Swahili films without subtitles" },
-    { name:"Amara Okafor",    country:"Nigeria",        flag:"🇳🇬", level:"Intermediate", online:true,  goal:"visit family friends in Kisumu" },
-    { name:"Lucas Silva",     country:"Brazil",         flag:"🇧🇷", level:"Beginner",     online:false, goal:"join a football exchange in Kenya" },
-    { name:"Chloé Dubois",    country:"France",         flag:"🇫🇷", level:"Elementary",   online:true,  goal:"study abroad in Nairobi next semester" },
-    { name:"Noah van Dijk",   country:"Netherlands",    flag:"🇳🇱", level:"Beginner",     online:false, goal:"prepare for a safari in the Maasai Mara" },
-    { name:"Priya Sharma",    country:"India",          flag:"🇮🇳", level:"Beginner",     online:true,  goal:"introduce my students to East African culture" },
-    { name:"Ahmed Hassan",    country:"Egypt",          flag:"🇪🇬", level:"Intermediate", online:false, goal:"work with suppliers based in Mombasa" },
-    { name:"Isabella García", country:"Spain",          flag:"🇪🇸", level:"Beginner",     online:true,  goal:"travel independently across East Africa" },
-    { name:"Min-jun Park",    country:"South Korea",    flag:"🇰🇷", level:"Beginner",     online:false, goal:"build lasting friendships with Kenyan peers" },
-    { name:"Olivia Brown",    country:"Australia",      flag:"🇦🇺", level:"Elementary",   online:true,  goal:"join a community project in Kilifi" },
-    { name:"Diego Fernández", country:"Mexico",         flag:"🇲🇽", level:"Beginner",     online:false, goal:"write songs that include Swahili lyrics" },
-    { name:"Anna Kowalska",   country:"Poland",         flag:"🇵🇱", level:"Beginner",     online:true,  goal:"work as a nurse in Tanzania" },
-    { name:"Chen Wei",        country:"China",          flag:"🇨🇳", level:"Beginner",     online:false, goal:"add a third language to my professional skills" },
-    { name:"Fatima Al-Zahra", country:"Morocco",        flag:"🇲🇦", level:"Intermediate", online:true,  goal:"read Swahili poetry in the original" },
-    { name:"Erik Johansson",  country:"Sweden",         flag:"🇸🇪", level:"Beginner",     online:false, goal:"attend a wedding in Nairobi this December" },
-    { name:"Zara Khan",       country:"Pakistan",       flag:"🇵🇰", level:"Beginner",     online:true,  goal:"pursue a career in translation" }
+  /* ================================================================
+     LEARNERS — 181 active users, all online
+     Hourly rate displayed in USD ($100 – $250)
+     ================================================================ */
+  const TOTAL_LEARNERS = 181;
+
+  const FIRST_NAMES = [
+    "Emma","Liam","Sofia","Yuki","Hans","Amara","Lucas","Chloé","Noah","Priya",
+    "Ahmed","Isabella","Min-jun","Olivia","Diego","Anna","Chen","Fatima","Erik","Zara",
+    "Mia","Ethan","Lucia","Kenji","Felix","Nadia","Pedro","Elena","Omar","Grace",
+    "Leo","Aisha","Mateo","Hana","Jonas","Ingrid","Samuel","Rosa","Tariq","Mei",
+    "Anders","Layla","Victor","Anya","Rafael","Chiara","David","Noor","Finn","Valentina"
   ];
 
-  const RATES = [600,500,700,800,600,900,500,700,600,800,1000,700,500,800,600,900,700,1000,600,800];
+  const LAST_NAMES = [
+    "Wilson","Carter","Rossi","Tanaka","Müller","Okafor","Silva","Dubois","van Dijk","Sharma",
+    "Hassan","García","Park","Brown","Fernández","Kowalska","Wei","Al-Zahra","Johansson","Khan",
+    "Andersen","Lopez","Kim","Novak","Mensah","Petrov","Haddad","Sato","Nielsen","Osei",
+    "Moreau","Ibrahim","Costa","Yilmaz","Jensen","Santos","Kaur","Kimani","Bianchi","Ondiek"
+  ];
+
+  const COUNTRIES = [
+    { name:"United Kingdom", flag:"🇬🇧" },
+    { name:"United States",  flag:"🇺🇸" },
+    { name:"Italy",          flag:"🇮🇹" },
+    { name:"Japan",          flag:"🇯🇵" },
+    { name:"Germany",        flag:"🇩🇪" },
+    { name:"Nigeria",        flag:"🇳🇬" },
+    { name:"Brazil",         flag:"🇧🇷" },
+    { name:"France",         flag:"🇫🇷" },
+    { name:"Netherlands",    flag:"🇳🇱" },
+    { name:"India",          flag:"🇮🇳" },
+    { name:"Egypt",          flag:"🇪🇬" },
+    { name:"Spain",          flag:"🇪🇸" },
+    { name:"South Korea",    flag:"🇰🇷" },
+    { name:"Australia",      flag:"🇦🇺" },
+    { name:"Mexico",         flag:"🇲🇽" },
+    { name:"Poland",         flag:"🇵🇱" },
+    { name:"China",          flag:"🇨🇳" },
+    { name:"Morocco",        flag:"🇲🇦" },
+    { name:"Sweden",         flag:"🇸🇪" },
+    { name:"Pakistan",       flag:"🇵🇰" }
+  ];
+
+  const LEVELS = ["Beginner","Elementary","Intermediate"];
+
+  const GOALS = [
+    "prepare for a business trip to Zanzibar",
+    "work more effectively with colleagues in Nairobi",
+    "volunteer on a health programme in Mombasa",
+    "collaborate with a design team in Nairobi",
+    "follow Swahili films without subtitles",
+    "visit family friends in Kisumu",
+    "join a football exchange in Kenya",
+    "study abroad in Nairobi next semester",
+    "prepare for a safari in the Maasai Mara",
+    "introduce my students to East African culture",
+    "work with suppliers based in Mombasa",
+    "travel independently across East Africa",
+    "build lasting friendships with Kenyan peers",
+    "join a community project in Kilifi",
+    "write songs that include Swahili lyrics",
+    "work as a nurse in Tanzania",
+    "add a third language to my professional skills",
+    "read Swahili poetry in the original",
+    "attend a wedding in Nairobi this December",
+    "pursue a career in translation"
+  ];
+
+  const RAW = Array.from({ length: TOTAL_LEARNERS }, (_, i) => {
+    const first   = FIRST_NAMES[i % FIRST_NAMES.length];
+    const last    = LAST_NAMES[(i * 7 + 3) % LAST_NAMES.length];
+    const country = COUNTRIES[i % COUNTRIES.length];
+    return {
+      name: `${first} ${last}`,
+      first,
+      country: country.name,
+      flag: country.flag,
+      level: LEVELS[i % LEVELS.length],
+      online: true,                     // every learner is online
+      goal: GOALS[i % GOALS.length],
+      rate: 100 + ((i * 53) % 151)      // $100 – $250 / hr
+    };
+  });
 
   const PALETTE = ["#E4572E","#0E7C66","#7C3AED","#0891B2","#DB2777","#F59E0B","#2563EB","#059669","#B45309","#9333EA","#DC2626","#0D9488","#4F46E5","#CA8A04","#BE185D","#0284C7","#65A30D","#C026D3","#EA580C","#0F766E"];
+
+  const contacts = RAW.map((c, i) => ({
+    ...c,
+    id: i + 1,
+    initials: c.name.split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase(),
+    color: PALETTE[i % PALETTE.length]
+  }));
 
   const CANNED = [
     { t:"Asante sana.",                                s:"Thank you very much." },
@@ -318,15 +375,6 @@
     "Unajifunza Kiswahili?",
     "Pole pole, tutasaidiana."
   ];
-
-  const contacts = RAW.map((c, i) => ({
-    ...c,
-    id: i + 1,
-    rate: RATES[i],
-    first: c.name.split(" ")[0],
-    initials: c.name.split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase(),
-    color: PALETTE[i % PALETTE.length]
-  }));
 
   /* ---------------- Elements ---------------- */
   const app          = document.getElementById("app");
@@ -380,7 +428,31 @@
   }
 
   /* ================================================================
-     PHONE NORMALIZATION
+     PER-LEARNER ACTIVATION
+     Each learner is unlocked individually. Paying for one learner
+     only opens that learner's chat — not all of them.
+     ================================================================ */
+  const ACTIVATED_KEY = "activatedContacts";
+
+  function isContactActivated(id) {
+    try {
+      const list = JSON.parse(localStorage.getItem(ACTIVATED_KEY) || "[]");
+      return Array.isArray(list) && list.includes(id);
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function markContactActivated(id) {
+    let list = [];
+    try { list = JSON.parse(localStorage.getItem(ACTIVATED_KEY) || "[]"); } catch (e) { list = []; }
+    if (!Array.isArray(list)) list = [];
+    if (!list.includes(id)) list.push(id);
+    localStorage.setItem(ACTIVATED_KEY, JSON.stringify(list));
+  }
+
+  /* ================================================================
+     PHONE NORMALIZATION (client-side fallback — backend re-validates)
      ================================================================ */
   function normalizePhoneForBackend(raw) {
     if (!raw) return null;
@@ -404,43 +476,34 @@
   }
 
   /* ================================================================
-     MEGAPAY — initiate STK
+     BACKEND — initiate STK via /api/initiate-payment
+     The api/initiate-payment.js handler converts 2547… → 07… and
+     talks to MegaPay, returning { reference, external_reference }.
      ================================================================ */
   async function initiateSTK(phone254, amount) {
-    let msisdn = phone254;
-    if (msisdn.startsWith('254')) msisdn = '0' + msisdn.substring(3);
-
-    const timestamp = Date.now();
-    const randomStr = Math.random().toString(36).substring(2, 8).toUpperCase();
-    const reference = `SWK-${timestamp}-${randomStr}`;
-
-    const payload = {
-      api_key: MEGAPAY_CONFIG.apiKey,
-      email: MEGAPAY_CONFIG.email,
-      amount: parseInt(amount, 10),
-      msisdn: msisdn,
-      reference: reference
-    };
-
-    console.log('[MegaPay] Initiating STK:', payload);
-
-    const response = await fetch(`${MEGAPAY_CONFIG.baseUrl}/backend/v1/initiatestk`, {
+    const response = await fetch('/api/initiate-payment', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify({
+        phone_number: phone254,
+        amount: Number(amount)
+      })
     });
 
-    const result = await response.json();
-    console.log('[MegaPay] Init response:', result);
+    const result = await response.json().catch(() => ({}));
+    console.log('[api/initiate-payment] response:', result);
 
-    if (!response.ok) throw new Error(result.message || result.error || 'Payment initiation failed');
-    if (!result.transaction_request_id) throw new Error(result.massage || result.message || 'No transaction ID returned');
+    if (!response.ok || !result.success || !result.reference) {
+      throw new Error(result.error || result.message || 'Payment initiation failed');
+    }
 
-    return { reference: result.transaction_request_id, external: reference };
+    return { reference: result.reference, external: result.external_reference };
   }
 
   /* ================================================================
-     MEGAPAY — poll transaction status
+     BACKEND — poll /api/verify-payment
+     The handler normalises MegaPay's response into
+     COMPLETED / PENDING / FAILED / CANCELLED / UNKNOWN.
      ================================================================ */
   function pollStatus(reference, maxAttempts = 30) {
     return new Promise((resolve, reject) => {
@@ -448,31 +511,16 @@
       pollInterval = setInterval(async () => {
         attempts++;
         try {
-          const response = await fetch(`${MEGAPAY_CONFIG.baseUrl}/backend/v1/transactionstatus`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              api_key: MEGAPAY_CONFIG.apiKey,
-              email: MEGAPAY_CONFIG.email,
-              transaction_request_id: reference
-            })
-          });
-          const result = await response.json();
-          console.log('[MegaPay] Status:', result);
+          const response = await fetch(`/api/verify-payment?reference=${encodeURIComponent(reference)}`);
+          const result = await response.json().catch(() => ({}));
+          console.log('[api/verify-payment] response:', result);
 
-          let status = result.TransactionStatus || result.status || '';
-          if (!status && result.ResponseCode !== undefined) {
-            status = Number(result.ResponseCode) === 0 ? 'COMPLETED' : 'FAILED';
-          }
-          if (!status && result.TransactionCode !== undefined) {
-            status = String(result.TransactionCode) === '0' ? 'COMPLETED' : 'PENDING';
-          }
-          const s = String(status).toUpperCase();
+          const status = String(result.status || '').toUpperCase();
 
-          if (s === 'COMPLETED' || s === 'SUCCESS' || s === 'PAID') {
+          if (status === 'COMPLETED') {
             clearInterval(pollInterval); pollInterval = null;
             resolve(true);
-          } else if (s === 'FAILED' || s === 'CANCELLED' || s === 'CANCELED') {
+          } else if (status === 'FAILED' || status === 'CANCELLED') {
             clearInterval(pollInterval); pollInterval = null;
             reject(new Error('Payment failed or was cancelled'));
           } else if (attempts >= maxAttempts) {
@@ -480,7 +528,7 @@
             reject(new Error('Verification timed out'));
           }
         } catch (err) {
-          console.error('[MegaPay] Status check error:', err);
+          console.error('[api/verify-payment] error:', err);
           if (attempts >= maxAttempts) {
             clearInterval(pollInterval); pollInterval = null;
             reject(new Error('Verification failed'));
@@ -515,10 +563,9 @@
   }
 
   /* ================================================================
-     CHARGE FEE — modal → STK → poll → resolve
+     CHARGE FEE — modal → /api/initiate-payment → poll → resolve
      ================================================================ */
   async function chargeFee({ amount, title, description }) {
-    // 1. Ask for phone number
     const result = await Swal.fire({
       title: title,
       html: `
@@ -562,28 +609,44 @@
           });
         }
       },
-      preConfirm: () => {
+      preConfirm: async () => {
         const input = document.getElementById('phone-input-modal');
         const wrap = document.getElementById('phone-wrap');
         const err = document.getElementById('phone-error-msg');
+
+        const showError = (msg) => {
+          if (wrap) wrap.classList.add('error');
+          if (err) { err.textContent = msg; err.classList.add('show'); }
+          return false;
+        };
+
         if (!input) return false;
         const raw = input.value.trim();
-        if (!raw) {
-          if (wrap) wrap.classList.add('error');
-          if (err) { err.textContent = 'Please enter your phone number.'; err.classList.add('show'); }
-          return false;
+        if (!raw) return showError('Please enter your phone number.');
+
+        // Validate against the backend first, then fall back to local rules.
+        let normalized = null;
+        try {
+          const r = await fetch('/api/normalize-phone', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone: raw })
+          });
+          const d = await r.json().catch(() => ({}));
+          if (r.ok && d && d.normalized_phone) normalized = d.normalized_phone;
+        } catch (e) {
+          console.warn('normalize-phone API unavailable — using local fallback', e);
         }
-        const normalized = normalizePhoneForBackend(raw);
+
+        if (!normalized) normalized = normalizePhoneForBackend(raw);
+
         if (!normalized) {
-          if (wrap) wrap.classList.add('error');
-          if (err) { err.textContent = 'Please enter a valid Kenyan phone number (07… or 01…).'; err.classList.add('show'); }
-          return false;
+          return showError('Please enter a valid Kenyan phone number (07… or 01…).');
         }
         if (!normalized.startsWith('2547') && !normalized.startsWith('2541')) {
-          if (wrap) wrap.classList.add('error');
-          if (err) { err.textContent = 'Please enter a valid Kenyan phone number (07… or 01…).'; err.classList.add('show'); }
-          return false;
+          return showError('Please enter a valid Kenyan phone number (07… or 01…).');
         }
+
         window._feePhone = normalized;
         return true;
       }
@@ -593,7 +656,6 @@
     const phone254 = window._feePhone;
     if (!phone254) return false;
 
-    // 2. Initiate STK
     try {
       Swal.fire({
         title: 'Sending M-Pesa prompt…',
@@ -605,7 +667,6 @@
       const { reference } = await initiateSTK(phone254, amount);
       Swal.close();
 
-      // 3. Show STK overlay + poll
       showStkOverlay(phone254, amount);
       await pollStatus(reference, 30);
       hideStkOverlay();
@@ -626,25 +687,25 @@
   }
 
   /* ================================================================
-     OPEN CHAT — activation gate
+     OPEN CHAT — per-learner activation gate
      ================================================================ */
   async function tryOpenChat(contact) {
-    if (localStorage.getItem('activationFeePaid') === 'true') {
+    if (isContactActivated(contact.id)) {
       openChat(contact);
       return;
     }
 
     const paid = await chargeFee({
-      amount: 100,
-      title: 'Activate your account',
-      description: 'Pay a one-time activation fee to start teaching on Sema Kiswahili.'
+      amount: 199,
+      title: `Unlock ${contact.first}'s chat`,
+      description: `Pay KES 199 once to unlock your conversation with ${contact.first} from ${contact.country}. This unlock applies to this learner only.`
     });
 
     if (paid) {
-      localStorage.setItem('activationFeePaid', 'true');
+      markContactActivated(contact.id);
       await Swal.fire({
-        title: 'Account activated',
-        html: 'Welcome aboard! You can now open any chat and start earning.',
+        title: 'Chat unlocked',
+        html: `You can now teach <strong>${contact.first}</strong> and start earning.`,
         icon: 'success',
         confirmButtonText: 'Start teaching',
         confirmButtonColor: '#0E7C66'
@@ -709,7 +770,7 @@
         <div class="chat-item-body">
           <div class="row">
             <span class="name">${c.name}</span>
-            <span class="rate-pill-sm">KES ${c.rate}/hr</span>
+            <span class="rate-pill-sm">$${c.rate}/hr</span>
           </div>
           <div class="row row-meta">
             <span class="country">${c.flag} ${c.country}</span>
@@ -789,7 +850,7 @@
     chatAvatar.textContent = contact.initials;
     chatAvatar.style.setProperty("--av", contact.color);
     chatName.textContent = contact.name;
-    chatStatus.textContent = `${contact.flag} ${contact.country} · ` + (contact.online ? "Online now" : "Last seen recently");
+    chatStatus.textContent = `${contact.flag} ${contact.country} · Online now`;
     chatLevel.textContent = contact.level;
 
     messages.innerHTML = '<div class="day-divider">Today</div>';
@@ -831,7 +892,6 @@
     later(deliverNext, readPause(950, 1500));
   }
 
-  /* Close the chat UI only (no history manipulation here). */
   function closeChatUI() {
     conversationPhase = "idle";
     session++;
@@ -922,7 +982,6 @@
   async function doWithdraw() {
     const amount = earningsBalance;
 
-    // Simulated withdrawal process
     Swal.fire({
       title: 'Sending to M-Pesa…',
       html: `
@@ -945,12 +1004,10 @@
 
     await new Promise(r => setTimeout(r, 1600));
 
-    // Reset balance
     earningsBalance = 0;
     localStorage.setItem('earningsBalance', '0');
     updateBalanceDisplay();
 
-    // Success message with 24-hour first-withdrawal note
     await Swal.fire({
       title: 'Withdrawal successful',
       html: `
@@ -986,9 +1043,9 @@
     }
 
     const paid = await chargeFee({
-      amount: 399,
+      amount: 2000,
       title: 'Activate withdrawals',
-      description: 'Pay a one-time fee to activate M-Pesa withdrawals to your phone.'
+      description: 'Pay a one-time fee of KES 2,000 to activate M-Pesa withdrawals to your phone.'
     });
 
     if (paid) {
