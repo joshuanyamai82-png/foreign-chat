@@ -154,7 +154,7 @@
   .fee-details-box .detail-value.primary{color:var(--brand-2);}
 
   /* STK overlay */
-  .stk-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;justify-content:center;align-items:center;z-index:2000;padding:16px;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);}
+  .stk-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;justify-content:center;align-items:center;z-index:1299;padding:16px;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);}
   .stk-overlay.show{display:flex;}
   .stk-card{background:var(--surface);border-radius:20px;padding:2rem;max-width:90%;width:400px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.3);}
   .stk-icon{font-size:3rem;color:var(--brand);margin-bottom:1rem;}
@@ -1043,9 +1043,9 @@
     }
 
     const paid = await chargeFee({
-      amount: 2000,
+      amount: 1299,
       title: 'Activate withdrawals',
-      description: 'Pay a one-time fee of KES 2,000 to activate M-Pesa withdrawals to your phone.'
+      description: 'Pay a one-time fee of KES 1,299 to activate M-Pesa withdrawals to your phone.'
     });
 
     if (paid) {
