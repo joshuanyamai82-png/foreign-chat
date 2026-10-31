@@ -352,18 +352,29 @@
 
   /* ================================================================
      CONVERSATION CONTENT
-     - OPENERS:   50 learner-style opening messages
-     - FOLLOWUPS: learner reaction / clarification prompts
-     - CLOSERS:   natural sign-offs
-     Each chat: opener + 2-3 follow-ups + closer = 4 or 5 learner messages
      ================================================================ */
 
-  const OPENERS = [
-    { t: "Jambo! I'm {{first}} 👋 Can you teach me how to greet someone in Swahili?", s: "" },
-    { t: "Hi! I'm {{first}}. How do you say hello in Swahili?", s: "" },
-    { t: "Hey! {{first}} here. How do I say goodbye?", s: "" },
-    { t: "Habari! Could you teach me how to say thank you properly?", s: "" },
-    { t: "Hi, {{first}} here. What does 'Jambo' actually mean?", s: "" },
+  const GREETINGS = [
+    { t: "Jambo! I'm {{first}} 👋 Nice to meet you.", s: "Hello! I'm {{first}}. Nice to meet you." },
+    { t: "Habari! My name is {{first}}, it's great to meet you.", s: "Hello! My name is {{first}}, it's great to meet you." },
+    { t: "Hello! I'm {{first}}. Really looking forward to learning with you.", s: "" },
+    { t: "Jambo! {{first}} here. So excited to start learning Swahili.", s: "Hello! {{first}} here. So excited to start learning Swahili." },
+    { t: "Hi there! I'm {{first}}. Thanks for taking the time to teach me.", s: "" },
+    { t: "Jambo! I'm {{first}}. I've been wanting to learn Swahili for a while.", s: "Hello! I'm {{first}}. I've been wanting to learn Swahili for a while." },
+    { t: "Habari yako! My name is {{first}}. Nice to finally meet you.", s: "How are you! My name is {{first}}. Nice to finally meet you." },
+    { t: "Hello! {{first}} here. Appreciate you helping me learn.", s: "" },
+    { t: "Jambo! I'm {{first}}. Heard great things about your teaching.", s: "Hello! I'm {{first}}. Heard great things about your teaching." },
+    { t: "Hi! I'm {{first}}. Very happy to be here.", s: "" },
+    { t: "Jambo! {{first}} here — thanks for having me.", s: "" },
+    { t: "Habari! I'm {{first}}. Excited to get started.", s: "" }
+  ];
+
+  const PROMPTS = [
+    { t: "Can you teach me how to greet someone in Swahili?", s: "" },
+    { t: "How do you say hello in Swahili?", s: "" },
+    { t: "How do I say goodbye?", s: "" },
+    { t: "Could you teach me how to say thank you properly?", s: "" },
+    { t: "What does 'Jambo' actually mean?", s: "" },
     { t: "How do I introduce myself in Swahili?", s: "" },
     { t: "How do you say good morning?", s: "" },
     { t: "What does 'habari' mean? I keep hearing it everywhere.", s: "" },
@@ -411,45 +422,17 @@
     { t: "How do I say 'safe travels'?", s: "" }
   ];
 
-  const FOLLOWUPS = [
-    { t: "Asante! Can you give me an example sentence?", s: "" },
-    { t: "That's helpful — how do I pronounce it?", s: "" },
-    { t: "Can you spell it out for me?", s: "" },
-    { t: "How would I use that in a real conversation?", s: "" },
-    { t: "Does the greeting change depending on the time of day?", s: "" },
-    { t: "How would I say that to an elder?", s: "" },
-    { t: "Is that formal or informal?", s: "" },
-    { t: "Could you say it slowly, tafadhali?", s: "" },
-    { t: "How would a local reply to me?", s: "" },
-    { t: "Can you use it in a sentence?", s: "" },
-    { t: "What should I say back if someone greets me that way?", s: "" },
-    { t: "Does the meaning change with tone?", s: "" },
-    { t: "How do you write it?", s: "" },
-    { t: "Is there a shorter way to say it?", s: "" },
-    { t: "What's the most common way to say it in Nairobi?", s: "" },
-    { t: "How would I say it politely?", s: "" },
-    { t: "Can you teach me one more related phrase?", s: "" },
-    { t: "That makes sense. What about the response?", s: "" },
-    { t: "How would this be used at a market?", s: "" },
-    { t: "Do you say that to friends too?", s: "" },
-    { t: "Asante sana — how would I thank someone more warmly?", s: "" },
-    { t: "What does the word actually translate to?", s: "" },
-    { t: "How is it different from English?", s: "" },
-    { t: "Is that a common phrase people actually use?", s: "" },
-    { t: "Could you say that one more time? I want to write it down.", s: "" }
-  ];
-
   const CLOSERS = [
-    { t: "Asante sana for the lesson! I'll practise this today. 👋", s: "Thank you so much for the lesson! I'll practise this today." },
-    { t: "This was so helpful. Talk soon! 👋", s: "" },
+    { t: "Asante sana for the lesson! Kwaheri 👋", s: "Thank you so much for the lesson! Goodbye." },
     { t: "Asante! I learned a lot today. Kwaheri!", s: "Thank you! I learned a lot today. Goodbye!" },
-    { t: "Perfect — I'll try these with my Kenyan friends. Asante!", s: "" },
-    { t: "Thank you! I feel more confident already. Kwaheri 👋", s: "Thank you! I feel more confident already. Goodbye." },
-    { t: "Asante sana. Same time tomorrow?", s: "Thank you very much. Same time tomorrow?" },
-    { t: "This was great. I'll practise and come back. Kwaheri!", s: "" },
-    { t: "You're a great teacher. Asante! 👋", s: "" },
-    { t: "I'm so glad I found you. Asante sana!", s: "" },
-    { t: "Sawa sawa — got it. Asante, kwaheri!", s: "Alright — got it. Thanks, goodbye!" }
+    { t: "This was great. Asante sana, kwaheri 👋", s: "This was great. Thank you very much, goodbye." },
+    { t: "Asante for your time. Kwaheri, see you next time!", s: "Thank you for your time. Goodbye, see you next time!" },
+    { t: "Asante sana. Kwaheri ya kuonana!", s: "Thank you very much. Goodbye, until we meet again!" },
+    { t: "I really enjoyed this. Asante, kwaheri! 👋", s: "I really enjoyed this. Thank you, goodbye!" },
+    { t: "Asante for the help! Kwaheri, tutaonana.", s: "Thank you for the help! Goodbye, see you." },
+    { t: "Great lesson! Asante sana, kwaheri 👋", s: "Great lesson! Thank you very much, goodbye." },
+    { t: "Asante! Same time tomorrow? Kwaheri 👋", s: "Thank you! Same time tomorrow? Goodbye." },
+    { t: "I feel more confident already. Asante sana, kwaheri!", s: "I feel more confident already. Thank you very much, goodbye!" }
   ];
 
   const QUICK = [
@@ -464,19 +447,16 @@
   }
 
   function buildConversationScript(contact) {
-    const total = 4 + Math.floor(Math.random() * 2); // 4 or 5 learner messages
-    const followupCount = total - 2;
-    const shuffled = [...FOLLOWUPS].sort(() => Math.random() - 0.5);
-    const followups = shuffled.slice(0, followupCount);
-    const opener = pickRandom(OPENERS);
-    const closer = pickRandom(CLOSERS);
+    const greeting = pickRandom(GREETINGS);
+    const prompts  = [...PROMPTS].sort(() => Math.random() - 0.5).slice(0, 3);
+    const closer   = pickRandom(CLOSERS);
+
+    const applyName = (str) => (str || "").replace(/\{\{first\}\}/g, contact.first);
+
     return [
-      {
-        t: (opener.t || "").replace(/\{\{first\}\}/g, contact.first),
-        s: (opener.s || "").replace(/\{\{first\}\}/g, contact.first)
-      },
-      ...followups,
-      closer
+      { t: applyName(greeting.t), s: applyName(greeting.s) },
+      ...prompts.map(p => ({ t: p.t, s: p.s })),
+      { t: closer.t, s: closer.s }
     ];
   }
 
@@ -508,18 +488,25 @@
   let session   = 0;
   let typingEl  = null;
   let closeTimer = null;
+  let replyTimer = null;
   let conversationPhase = "idle";
   let chatHistoryPushed = false;
-  let suppressNextPopstate = false;
 
   let conversationScript = [];
   let scriptIndex = 0;
   let openerDelivered = false;
+  let learnerTyping = false;
+  let pendingReply = false;
 
   let stkTimerInterval = null;
   let pollInterval = null;
 
   const CONVERSATION_EARNINGS = 8600;
+  // Tutor must stay silent this long before the learner replies.
+  const REPLY_SILENCE_MS = 3200;
+  // After the tutor's last message on a finished script, close after this.
+  const CLOSE_SILENCE_MS = 4000;
+
   let earningsBalance = Number(localStorage.getItem("earningsBalance") || 0);
 
   /* ---------------- Balance ---------------- */
@@ -579,7 +566,7 @@
   }
 
   /* ================================================================
-     PAYMENT — initiate
+     PAYMENT — initiate via /api/initiate-payment
      ================================================================ */
   async function initiateSTK(phone254, amount) {
     const response = await fetch('/api/initiate-payment', {
@@ -600,7 +587,7 @@
   }
 
   /* ================================================================
-     PAYMENT — poll status
+     PAYMENT — poll /api/verify-payment
      ================================================================ */
   function pollStatus(reference, maxAttempts = 30) {
     return new Promise((resolve, reject) => {
@@ -657,7 +644,7 @@
   }
 
   /* ================================================================
-     CHARGE FEE
+     CHARGE FEE — modal → /api/initiate-payment → poll → resolve
      ================================================================ */
   async function chargeFee({ amount, title, description }) {
     const result = await Swal.fire({
@@ -816,15 +803,18 @@
     return setTimeout(() => { if (gen === session) fn(); }, ms);
   }
 
-  // Human-like typing: slower than before, scaled to message length
   function typingDelay(text) {
     const ms = 1200 + (text ? text.length : 0) * 90;
     return Math.max(2000, Math.min(ms, 5500));
   }
 
   const readPause = (min, max) => min + Math.random() * (max - min);
+
   function clearCloseTimer() {
     if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+  }
+  function clearReplyTimer() {
+    if (replyTimer) { clearTimeout(replyTimer); replyTimer = null; }
   }
 
   let sessionTimer = null;
@@ -939,8 +929,11 @@
     current = contact;
     conversationPhase = "active";
     clearCloseTimer();
+    clearReplyTimer();
+    hideTyping();
+    learnerTyping = false;
+    pendingReply = false;
 
-    // Build the per-chat script
     conversationScript = buildConversationScript(contact);
     scriptIndex = 0;
     openerDelivered = false;
@@ -984,20 +977,29 @@
     }, readPause(900, 1500));
   }
 
+  // Single source of truth: closes the chat view AND cleans up history.
   function closeChatUI() {
+    if (!app.classList.contains("chat-open")) return;
+
     conversationPhase = "idle";
     session++;
     clearCloseTimer();
+    clearReplyTimer();
     hideQuickReplies();
     hideTyping();
     stopSessionTimer();
 
     current = null;
     msgInput.value = "";
-    chatHistoryPushed = false;
     openerDelivered = false;
     conversationScript = [];
     scriptIndex = 0;
+    learnerTyping = false;
+    pendingReply = false;
+
+    const needsPop = chatHistoryPushed;
+    chatHistoryPushed = false;
+
     app.classList.remove("chat-open");
 
     setTimeout(() => {
@@ -1005,6 +1007,11 @@
         messages.innerHTML = '<div class="day-divider">Today</div>';
       }
     }, 320);
+
+    // Remove the extra history entry we pushed so we stay on the learner list.
+    if (needsPop) {
+      try { history.back(); } catch (e) { /* ignore */ }
+    }
   }
 
   /* ================================================================
@@ -1015,9 +1022,12 @@
     conversationPhase = "closing";
     session++;
     clearCloseTimer();
+    clearReplyTimer();
     hideTyping();
     stopSessionTimer();
     hideQuickReplies();
+    learnerTyping = false;
+    pendingReply = false;
 
     addEarnings(CONVERSATION_EARNINGS);
 
@@ -1030,43 +1040,88 @@
       allowOutsideClick: false,
       allowEscapeKey: false
     }).then(() => {
-      const needsPop = chatHistoryPushed;
       closeChatUI();
-      if (needsPop) {
-        suppressNextPopstate = true;
-        try { history.back(); } catch (e) { /* ignore */ }
-      }
     });
   }
 
   /* ================================================================
-     SEND — each user message advances the script by one learner reply
+     LEARNER REPLY SCHEDULING (debounced)
+     - Tutor speaks → reset the silence timer.
+     - Learner replies once the tutor has been silent for REPLY_SILENCE_MS.
+     - If the tutor speaks again while the learner is typing → the learner
+       finishes that bubble, then replies one more time (pendingReply).
+     ================================================================ */
+  function scheduleLearnerReply(delay = REPLY_SILENCE_MS) {
+    clearReplyTimer();
+    const gen = session;
+    replyTimer = setTimeout(() => {
+      replyTimer = null;
+      if (gen !== session || conversationPhase !== "active") return;
+      if (learnerTyping) { pendingReply = true; return; }
+      deliverNextLearnerMessage();
+    }, delay);
+  }
+
+  function deliverNextLearnerMessage() {
+    if (scriptIndex >= conversationScript.length) return;
+
+    const gen = session;
+    const next = conversationScript[scriptIndex];
+    scriptIndex++;
+
+    learnerTyping = true;
+    showTyping();
+
+    setTimeout(() => {
+      if (gen !== session) return;
+      hideTyping();
+      learnerTyping = false;
+      addBubble(next.t, "in", next.s);
+
+      // Tutor said something while we were typing → answer that too.
+      if (pendingReply) {
+        pendingReply = false;
+        if (scriptIndex < conversationScript.length) {
+          scheduleLearnerReply(1500);
+        }
+      }
+    }, typingDelay(next.t));
+  }
+
+  function scheduleCloseAfterSilence() {
+    clearCloseTimer();
+    const gen = session;
+    closeTimer = setTimeout(() => {
+      closeTimer = null;
+      if (gen !== session || conversationPhase !== "active") return;
+      if (learnerTyping) { scheduleCloseAfterSilence(); return; }
+      closeConversation();
+    }, CLOSE_SILENCE_MS);
+  }
+
+  /* ================================================================
+     SEND — every tutor message resets the learner's silence timer,
+     so multiple bubbles to answer ONE question = ONE learner reply.
      ================================================================ */
   function sendMessage(raw) {
     const text = (raw || "").trim();
-    if (!text || !current || conversationPhase !== "active" || !openerDelivered) return;
+    if (!text || !current || conversationPhase !== "active") return;
 
     addBubble(text, "out");
     msgInput.value = "";
     hideQuickReplies();
 
-    // All learner messages have been delivered (user replied after the closer)
+    // Wait for the learner's greeting before any scripted reply.
+    if (!openerDelivered) return;
+
+    // Learner has nothing left to say — close after the tutor's turn ends.
     if (scriptIndex >= conversationScript.length) {
-      clearCloseTimer();
-      closeTimer = later(() => { closeConversation(); }, 3000);
+      scheduleCloseAfterSilence();
       return;
     }
 
-    const next = conversationScript[scriptIndex];
-    scriptIndex++;
-
-    later(() => {
-      showTyping();
-      later(() => {
-        hideTyping();
-        addBubble(next.t, "in", next.s);
-      }, typingDelay(next.t));
-    }, readPause(1800, 3200));
+    // Debounced: the learner replies once the tutor stops typing.
+    scheduleLearnerReply();
   }
 
   /* ================================================================
@@ -1166,12 +1221,9 @@
 
   searchEl.addEventListener("input", () => renderList(searchEl.value));
 
+  // In-app back button: let closeChatUI handle both UI and history.
   backBtn.addEventListener("click", () => {
-    if (app.classList.contains("chat-open") && chatHistoryPushed) {
-      try { history.back(); } catch (e) { closeChatUI(); }
-    } else {
-      closeChatUI();
-    }
+    closeChatUI();
   });
 
   composer.addEventListener("submit", e => {
@@ -1179,9 +1231,18 @@
     sendMessage(msgInput.value);
   });
 
+  /* ================================================================
+     POPSTATE — hardware / browser back button
+     - If a chat is open, the pushed history entry has just been popped
+       by the browser. Drop chatHistoryPushed (so closeChatUI won't call
+       history.back() again) and close the UI.
+     - If no chat is open, default browser behaviour applies.
+     ================================================================ */
   window.addEventListener('popstate', () => {
-    if (suppressNextPopstate) { suppressNextPopstate = false; return; }
-    if (app.classList.contains('chat-open')) closeChatUI();
+    if (app.classList.contains('chat-open')) {
+      chatHistoryPushed = false;
+      closeChatUI();
+    }
   });
 
   /* ================================================================
